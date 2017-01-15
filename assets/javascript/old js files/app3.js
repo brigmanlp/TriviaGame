@@ -1,30 +1,4 @@
-// * You'll create a trivia game that shows only one question until
-//  the player answers it or their time runs out.
-
-
 $(document).ready(function() {
-
-    // var questions = [{
-    //     question: "How do you declare a JavaScript variable?",
-    //     choices: ["var carName", "variable carName", "v carName", "carName"],
-    //     answer: 0,
-    //     img: "assets/images/question1.jpg"
-    // }, {
-    //     question: "Which event occurs when the user clicks on an HTML element?",
-    //     choices: ["onchange", "onmouseclick", "onmouseover", "onclick"],
-    //     answer: 3,
-    //     img: "assets/images/question2.jpg"
-    // }, {
-    //     question: "Lots of websites have links that change color when you move your cursor over them. What selector represents an A tag that has the cursor over it?",
-    //     choices: ["@selected", "a:mouseover", "a:selected", "a:hover"],
-    //     answer: 3,
-    //     img: "assets/images/question3.jpg"
-    // }, {
-    //     question: "The CSS 'box model' describes a rectangular area around an element, used when laying out elements on the page. Which three properties affect the box model?",
-    //     choices: ["distance, margin, border", "margin, padding, border", "margin, padding-outer, padding-inner", "position, margin, padding", ],
-    //     answer: 1,
-    //     img: "assets/images/question4.jpg"
-    // }];
 
     var numberCorrect = 0;
     var numberIncorrect = 0;
@@ -32,12 +6,13 @@ $(document).ready(function() {
     var thisQuestion;
     var answered;
     var storeAnswer;
-    var birdPhoto;
     var answerDisplay;
     var currentQuestion = 0;
 
-    //  Set our number counter to 40 seconds.
-    var countdown = 40;
+    //  Set our number counter to 15 minutes.
+    var timer = 60 * 15;
+    var minutes = parseInt(timer / 60, 10);
+    var seconds = parseInt(timer % 60, 10);
 
     //  Variable that will hold our interval ID when we execute
     //  the "run" function
@@ -47,7 +22,7 @@ $(document).ready(function() {
         var windowTimeout = setTimeout(function() {
             displayResults();
         }, 1000);
-    }
+    }    
 
     //  The run function sets an interval
     //  that runs the decrement function once a second.
@@ -57,20 +32,24 @@ $(document).ready(function() {
 
     //  The decrement function that decreases number by 1.
     function decrement() {
-        countdown--;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        timer--;
         //  Show the number in the #show-number tag.
-        $("#countdown").text("Time Remaining: " + countdown);
+        $("#timer").html("Time Remaining: " minutes + ":" + seconds);
         //  Once number hits zero, run stop function.
-        if (countdown === 0) {
+        //**************
+        if (timer === 0) {
             stopTimer();
             clearDisplay();
+
 
             $("#response").text("Time is up! The correct answer was " + answerDisplay + ".");
             unanswered++;
             console.log("Unanswered questions: " + numberIncorrect)
-            $("#computerimg").empty();
-            $("#computerimg").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
-
+            $("#birdie").empty();
+            $("#birdie").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
+            
             currentQuestion++;
             if (currentQuestion >= questions.length) {
                 waitForIt();
@@ -88,7 +67,7 @@ $(document).ready(function() {
     };
 
     function resetTimer() {
-        countdown = 40;
+        timer = intervalId;
     };
 
 
@@ -108,7 +87,7 @@ $(document).ready(function() {
         numberCorrect = 0;
         numberIncorrect = 0;
         unanswered = 0;
-        $("#computerimg").empty();
+        $("#birdie").empty();
         $("#response").empty();
         displayDiv();
         resetTimer();
@@ -162,12 +141,12 @@ $(document).ready(function() {
             $("#response").text("That's correct! The answer was " + answerDisplay + ".");
             numberCorrect++;
             console.log("numberCorrect: " + numberCorrect)
-            $("#computerimg").empty();
-            $("#computerimg").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
+            $("#birdie").empty();
+            $("#birdie").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
             currentQuestion++;
             if (currentQuestion >= questions.length) {
                 waitForIt();
-
+                
             } else {
                 resetTimer();
                 displayDiv();
@@ -181,8 +160,8 @@ $(document).ready(function() {
             $("#response").text("Sorry! The correct answer was " + answerDisplay + ".");
             numberIncorrect++;
             console.log("numberIncorrect: " + numberIncorrect)
-            $("#computerimg").empty();
-            $("#computerimg").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
+            $("#birdie").empty();
+            $("#birdie").prepend("<img src=" + '"' + birdPhoto + '"' + " >");
             currentQuestion++;
             if (currentQuestion >= questions.length) {
                 waitForIt();
@@ -202,6 +181,5 @@ $(document).ready(function() {
 
     // After clicking Start button, hide Start button
     $("#startGame").on("click", hideStart);
-
 
 });
